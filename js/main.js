@@ -22,6 +22,15 @@ function jugarRonda(animal) {
     // Mostrar la pista al jugador
     alert('Pista - ' + animal.pista);
 
+    // Pedir al jugador si desea continuar o cancelar la ronda
+    const continuar = confirm("¿Deseas continuar con esta ronda? Presiona OK para continuar o Cancelar para terminar el juego.");
+
+    // Verificar si el jugador desea continuar o cancelar
+    if (!continuar) {
+        alert('Has cancelado el juego. ¡Hasta la próxima!');
+        return true; // Indicar que el juego ha finalizado
+    }
+
     // Pedir al jugador adivinar el nombre del animal
     const respuesta = prompt("¿Cuál es el nombre del animal?");
 
@@ -39,6 +48,8 @@ function jugarRonda(animal) {
 
     // Mostrar el puntaje actual al jugador
     alert('Tu puntaje actual es: ' + puntaje);
+
+    return false; // Indicar que el juego aún continúa
 }
 
 // Función para iniciar el juego
@@ -60,7 +71,10 @@ function iniciarJuego(totalRondas, condicionGanar) {
     // Jugar las rondas
     for (let ronda = 1; ronda <= totalRondas; ronda++) {
         const animal = seleccionarAnimal();
-        jugarRonda(animal);
+        const juegoFinalizado = jugarRonda(animal);
+        if (juegoFinalizado) {
+            return; // Salir del bucle si el juego ha finalizado
+        }
         if (condicionGanar(puntaje)) {
             alert('¡Has ganado el juego con ' + puntaje + ' puntos!');
             alert('Gracias por jugar. ¡Hasta la próxima!');
@@ -79,16 +93,16 @@ function iniciarJuego(totalRondas, condicionGanar) {
 
 // Función para agregar un nuevo animal y pista
 function agregarAnimalYPista() {
-    const nombreNuevo = prompt("Ingrese el nombre del nuevo animal:");
-    
-    // Verificar si el nombre del animal ya existe en la lista
-    const animalExistente = animales.find(animal => animal.nombre.toLowerCase() === nombreNuevo.toLowerCase());
-    if (animalExistente) {
-        alert("¡El animal ya existe en la lista!");
-        return;
-    }
-    
-    const pistaNueva = prompt("Ingrese la pista para el nuevo animal:");
+    let nombreNuevo;
+    let pistaNueva;
+    do {
+        nombreNuevo = prompt("Ingrese el nombre del nuevo animal:");
+    } while (!nombreNuevo.trim()); // Repetir hasta que se proporcione un nombre no vacío
+
+    do {
+        pistaNueva = prompt("Ingrese la pista para el nuevo animal:");
+    } while (!pistaNueva.trim()); // Repetir hasta que se proporcione una pista no vacía
+
     const nuevoAnimal = { nombre: nombreNuevo, pista: pistaNueva };
     animales.push(nuevoAnimal);
     alert("Nuevo animal agregado con éxito!");
@@ -96,6 +110,11 @@ function agregarAnimalYPista() {
 
 // Función para buscar un animal por nombre
 function buscarAnimal(nombre) {
+    // Verificar si se proporcionó un nombre
+    while (!nombre) {
+        nombre = prompt("Debe ingresar un nombre de animal. Por favor, inténtelo de nuevo:");
+    }
+
     const animalEncontrado = animales.find(animal => animal.nombre === nombre);
     if (animalEncontrado) {
         alert('Animal encontrado: ' + animalEncontrado.nombre + ' - ' + animalEncontrado.pista);
