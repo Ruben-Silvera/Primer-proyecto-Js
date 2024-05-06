@@ -21,14 +21,14 @@ function seleccionarAnimal() {
 function jugarRonda(animal) {
     // Mostrar la pista al jugador
     alert('Pista - ' + animal.pista);
-    
+
     // Pedir al jugador adivinar el nombre del animal
     const respuesta = prompt("¿Cuál es el nombre del animal?");
-    
+
     // Convertir la respuesta del jugador y el nombre del animal a mayúsculas (para evitar dolores de cabeza)
     const respuestaMayusculas = respuesta.toUpperCase();
     const nombreAnimalMayusculas = animal.nombre.toUpperCase();
-    
+
     // Verificar si la respuesta es correcta
     if (respuestaMayusculas === nombreAnimalMayusculas) {
         alert('¡Correcto! Has ganado un punto.');
@@ -36,7 +36,7 @@ function jugarRonda(animal) {
     } else {
         alert('Incorrecto. El animal era: ' + animal.nombre);
     }
-    
+
     // Mostrar el puntaje actual al jugador
     alert('Tu puntaje actual es: ' + puntaje);
 }
@@ -45,18 +45,18 @@ function jugarRonda(animal) {
 function iniciarJuego(totalRondas, condicionGanar) {
     // Mensaje inicial con las reglas del juego
     const mensajeInicial = "¡Bienvenido al juego de adivinar animales!\n" +
-                           "Aquí tienes que adivinar el nombre del animal basándote en la pista que se te da.\n" +
-                           "Ganas un punto por cada respuesta correcta y el juego termina cuando alcanzas 3 puntos.\n" +
-                           "¡Buena suerte!";
+        "Aquí tienes que adivinar el nombre del animal basándote en la pista que se te da.\n" +
+        "Ganas un punto por cada respuesta correcta y el juego termina cuando alcanzas 3 puntos.\n" +
+        "¡Buena suerte!";
     alert(mensajeInicial);
-    
+
     // Preguntar al jugador si quiere jugar
     const jugar = confirm("¿Quieres jugar al juego de adivinar animales?");
     if (!jugar) {
         alert("¡Hasta luego!");
         return;
     }
-    
+
     // Jugar las rondas
     for (let ronda = 1; ronda <= totalRondas; ronda++) {
         const animal = seleccionarAnimal();
@@ -67,7 +67,7 @@ function iniciarJuego(totalRondas, condicionGanar) {
             return;
         }
     }
-    
+
     // Preguntar al jugador si quiere agregar un nuevo animal
     const agregarNuevo = confirm("¿Quieres agregar un nuevo animal a la lista?");
     if (agregarNuevo) {
@@ -80,6 +80,14 @@ function iniciarJuego(totalRondas, condicionGanar) {
 // Función para agregar un nuevo animal y pista
 function agregarAnimalYPista() {
     const nombreNuevo = prompt("Ingrese el nombre del nuevo animal:");
+    
+    // Verificar si el nombre del animal ya existe en la lista
+    const animalExistente = animales.find(animal => animal.nombre.toLowerCase() === nombreNuevo.toLowerCase());
+    if (animalExistente) {
+        alert("¡El animal ya existe en la lista!");
+        return;
+    }
+    
     const pistaNueva = prompt("Ingrese la pista para el nuevo animal:");
     const nuevoAnimal = { nombre: nombreNuevo, pista: pistaNueva };
     animales.push(nuevoAnimal);
@@ -92,13 +100,18 @@ function buscarAnimal(nombre) {
     if (animalEncontrado) {
         alert('Animal encontrado: ' + animalEncontrado.nombre + ' - ' + animalEncontrado.pista);
     } else {
-        alert('Animal no encontrado.');
+        const agregarNuevo = confirm("El animal no se encuentra en la lista. ¿Quieres agregarlo?");
+        if (agregarNuevo) {
+            agregarAnimalYPista();
+        } else {
+            alert('Animal no encontrado.');
+        }
     }
 }
 
-// Iniciar el juego con la nueva lógica
+// Iniciar el juego
 iniciarJuego(5, (puntaje) => puntaje >= 3);
 
-// Ejemplo de búsqueda de un animal por nombre
+// Búsqueda de un animal por nombre
 const nombreBusqueda = prompt("Ingrese el nombre del animal que desea buscar:");
 buscarAnimal(nombreBusqueda);
